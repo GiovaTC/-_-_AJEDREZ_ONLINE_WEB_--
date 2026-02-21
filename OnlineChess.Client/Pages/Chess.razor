@@ -1,0 +1,83 @@
+﻿@page "/chess/{GameId:int}"
+
+@using Microsoft.AspNetCore.SignalR.Client
+@using OnlineChess.Shared.Data
+@using OnlineChess.Shared.Models
+
+<h2>♟️ Online Chess</h2>
+
+<table class="chess-board">
+@for (int y = 0; y < 8; y++)
+{
+    <tr>
+    @for (int x = 0; x < 8; x++)
+    {
+        <td @onclick="() => Click(x, y)">
+            @board[y, x]
+        </td>
+    }
+    </tr>
+}
+</table>
+
+@code {
+    [Parameter] public int GameId { get; set; }
+
+    private HubConnection? hub;
+    private char[,] board = ChessBoard.Initial();
+
+    private int sx, sy;
+    private bool selected;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hub = new HubConnectionBuilder()
+            .WithUrl("/chessHub")
+            .WithAutomaticReconnect()
+            .Build();
+
+        hub.On<Move>("MovePlayed", move =>
+        {
+            board[move.ToY, move.ToX] = board[move.FromY, move.FromX];
+            board[move.FromY, move.FromX] = '.';
+            StateHasChanged();
+        });
+
+        await hub.StartAsync();
+        await hub.SendAsync("JoinGame", GameId);
+    }
+
+    private async Task Click(int x, int y)
+    {
+        if (!selected)
+        {
+            sx = x;
+            sy = y;
+            selected = true;
+        }
+        else
+        {
+            if (hub is not null)
+            {
+                await hub.SendAsync("MakeMove", GameId,
+                    new Move
+                    {
+                        FromX = sx,
+                        FromY = sy,
+                        ToX = x,
+                        ToY = y
+                    });
+            }
+
+            selected = false;
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hub is not null)
+        {
+            await hub.DisposeAsync();
+        }
+    }
+}
