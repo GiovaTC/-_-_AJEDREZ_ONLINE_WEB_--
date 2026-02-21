@@ -1,0 +1,11 @@
+C:\Users\USUARIO\source\repos\OnlineChess.Shared\bin\Debug\net8.0\OnlineChess.Shared.deps.json
+C:\Users\USUARIO\source\repos\OnlineChess.Shared\bin\Debug\net8.0\OnlineChess.Shared.dll
+C:\Users\USUARIO\source\repos\OnlineChess.Shared\bin\Debug\net8.0\OnlineChess.Shared.pdb
+C:\Users\USUARIO\source\repos\OnlineChess.Shared\obj\Debug\net8.0\OnlineChess.Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\USUARIO\source\repos\OnlineChess.Shared\obj\Debug\net8.0\OnlineChess.Shared.AssemblyInfoInputs.cache
+C:\Users\USUARIO\source\repos\OnlineChess.Shared\obj\Debug\net8.0\OnlineChess.Shared.AssemblyInfo.cs
+C:\Users\USUARIO\source\repos\OnlineChess.Shared\obj\Debug\net8.0\OnlineChess.Shared.csproj.CoreCompileInputs.cache
+C:\Users\USUARIO\source\repos\OnlineChess.Shared\obj\Debug\net8.0\OnlineChess.Shared.dll
+C:\Users\USUARIO\source\repos\OnlineChess.Shared\obj\Debug\net8.0\refint\OnlineChess.Shared.dll
+C:\Users\USUARIO\source\repos\OnlineChess.Shared\obj\Debug\net8.0\OnlineChess.Shared.pdb
+C:\Users\USUARIO\source\repos\OnlineChess.Shared\obj\Debug\net8.0\ref\OnlineChess.Shared.dll
