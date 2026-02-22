@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OnlineChess.Shared.Models
 {
-    internal class Player
+    public class Player
     {
     }
 }

@@ -2,11 +2,9 @@
 {
     public static class ChessBoard
     {
-        public const int Size = 8;
-
         public static char[,] Initial()
         {
-            return new char[Size, Size]
+            return new char[8, 8]
             {
                 { 'r','n','b','q','k','b','n','r' },
                 { 'p','p','p','p','p','p','p','p' },

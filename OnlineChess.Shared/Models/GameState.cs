@@ -6,7 +6,15 @@ using System.Threading.Tasks;
 
 namespace OnlineChess.Shared.Models
 {
-    internal class GameState
+    public class GameState
     {
+        public object Moves;
+
+        public GameState(object moves)
+        {
+            Moves = moves;
+        }
+
+        public int Id;
     }
 }
