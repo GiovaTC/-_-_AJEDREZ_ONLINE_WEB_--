@@ -2,153 +2,185 @@
 # ♟️ AJEDREZ ONLINE WEB:  
 **Multijugador en Tiempo Real con Base de Datos**  
 
-<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/4bd29d46-6667-40e7-889e-4fbd173f97cd" />  
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/4bd29d46-6667-40e7-889e-4fbd173f97cd" />      
 
-Proyecto **web profesional** con arquitectura **Cliente–Servidor**, persistencia real y comunicación en tiempo real, diseñado al nivel de un **proyecto final universitario** o **portafolio avanzado**.
+Proyecto web profesional con arquitectura Cliente–Servidor, comunicación en tiempo real, y persistencia real en base de datos, diseñado al nivel de un proyecto final universitario o portafolio avanzado.
 
----
-
-## 🧩 Stack Tecnológico:
-
-| Capa | Tecnología |
-|---|---|
-| **Frontend** | Blazor Server |
-| **Backend** | ASP.NET Core |
-| **Tiempo real** | SignalR |
-| **ORM** | Entity Framework Core |
-| **Base de datos** | SQL Server / Oracle 19c |
-| **Autenticación** | Usuarios simples |
-| **Arquitectura** | Cliente–Servidor |
-
----
+## 🧩 Stack Tecnologico:
+* Capa	Tecnología
+* Frontend	Blazor WebAssembly
+* Backend	ASP.NET Core
+* Tiempo real	SignalR
+* ORM	Entity Framework Core
+* Base de datos	SQL Server / Oracle 19c
+* Arquitectura	Cliente – Servidor – Shared
+* Patrón	Separación de responsabilidades
 
 ## 📁 Estructura Final del Proyecto:
-
-```text
+```
 OnlineChess/
 │
-├── Server/
+├── OnlineChess.Client
+│   ├── Pages
+│   │   └── Chess.razor
 │   ├── Program.cs
-│   ├── Data/
-│   │   ├── ChessDbContext.cs
-│   │   └── DbInitializer.cs
-│   ├── Hubs/
+│   └── _Imports.razor
+│
+├── OnlineChess.Server
+│   ├── Program.cs
+│   ├── Hubs
 │   │   └── ChessHub.cs
-│   ├── Models/
-│   │   ├── User.cs
-│   │   ├── Game.cs
-│   │   └── Move.cs
+│   ├── Data
+│   │   └── ChessDbContext.cs
+│   └── appsettings.json
 │
-├── Client/
-│   └── Pages/
-│       └── Chess.razor
-│
-└── Shared/
-    └── ChessBoard.cs
-
-🗄️ 1️⃣ Base de Datos – Modelo de Entidades.
-📌 User.cs
-public class User
+└── OnlineChess.Shared
+    ├── Data
+    │   └── ChessBoard.cs
+    └── Models
+        └── Move.cs
+```
+- 🗄️ 1️⃣ Modelo de Datos (Shared).
+- 📌 ChessBoard.cs
+```
+namespace OnlineChess.Shared.Data
 {
-    public int Id { get; set; }
-    public string Username { get; set; }
+    public static class ChessBoard
+    {
+        public static char[,] Initial()
+        {
+            return new char[8, 8]
+            {
+                { 'r','n','b','q','k','b','n','r' },
+                { 'p','p','p','p','p','p','p','p' },
+                { '.','.','.','.','.','.','.','.' },
+                { '.','.','.','.','.','.','.','.' },
+                { '.','.','.','.','.','.','.','.' },
+                { '.','.','.','.','.','.','.','.' },
+                { 'P','P','P','P','P','P','P','P' },
+                { 'R','N','B','Q','K','B','N','R' }
+            };
+        }
+    }
 }
-📌 Game.cs
-using System.Collections.Generic;
-
-public class Game
+```
+- 📌 Move.cs
+```
+namespace OnlineChess.Shared.Models
 {
-    public int Id { get; set; }
-    public int WhitePlayerId { get; set; }
-    public int BlackPlayerId { get; set; }
-    public bool WhiteTurn { get; set; } = true;
-
-    public List<Move> Moves { get; set; }
+    public class Move
+    {
+        public int FromX { get; set; }
+        public int FromY { get; set; }
+        public int ToX { get; set; }
+        public int ToY { get; set; }
+    }
 }
-📌 Move.cs
-public class Move
+```
+- 🧠 2️⃣ DbContext – Entity Framework Core (Server).
+- 📌 ChessDbContext.cs
+```
+using Microsoft.EntityFrameworkCore;
+using OnlineChess.Shared.Models;
+
+namespace OnlineChess.Server.Data
 {
-    public int Id { get; set; }
-    public int GameId { get; set; }
+    public class ChessDbContext : DbContext
+    {
+        public ChessDbContext(DbContextOptions<ChessDbContext> options)
+            : base(options) { }
 
-    public int FromX { get; set; }
-    public int FromY { get; set; }
-    public int ToX { get; set; }
-    public int ToY { get; set; }
+        public DbSet<Move> Moves { get; set; }
+    }
 }
-
-🧠 2️⃣ DbContext – Entity Framework Core.
+```
+- ⚙️ 3️⃣ Program.cs – Configuración del Servidor.
+```
+using OnlineChess.Server.Data;
+using OnlineChess.Server.Hubs;
 using Microsoft.EntityFrameworkCore;
 
-public class ChessDbContext : DbContext
-{
-    public ChessDbContext(DbContextOptions<ChessDbContext> options)
-        : base(options) { }
+var builder = WebApplication.CreateBuilder(args);
 
-    public DbSet<User> Users { get; set; }
-    public DbSet<Game> Games { get; set; }
-    public DbSet<Move> Moves { get; set; }
-}
+builder.Services.AddDbContext<ChessDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("ChessDB")
+    )
+);
 
-⚙️ 3️⃣ Program.cs – Configuración de BD y SignalR.
-▶ SQL Server
-builder.Services.AddDbContext<ChessDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ChessDB")));
-▶ Oracle 19c
-builder.Services.AddDbContext<ChessDbContext>(options =>
-    options.UseOracle(builder.Configuration.GetConnectionString("OracleChessDB")));
 builder.Services.AddSignalR();
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+
+var app = builder.Build();
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+
+app.MapHub<ChessHub>("/chessHub");
+app.MapControllers();
+app.MapFallbackToFile("index.html");
+
+app.Run();
 📄 appsettings.json (SQL Server)
 {
   "ConnectionStrings": {
     "ChessDB": "Server=localhost;Database=OnlineChess;Trusted_Connection=True;"
   }
 }
-📄 appsettings.json (Oracle)
+📄 appsettings.json (Oracle 19c – alternativa)
 {
   "ConnectionStrings": {
     "OracleChessDB": "User Id=CHESS;Password=chess123;Data Source=localhost:1521/XEPDB1"
   }
 }
-
-🌐 4️⃣ SignalR Hub – Persistencia de Partidas.
-📌 ChessHub.cs
+```
+- 🌐 4️⃣ SignalR Hub – Persistencia y Tiempo Real.
+- 📌 ChessHub.cs
+```
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
+using OnlineChess.Server.Data;
+using OnlineChess.Shared.Models;
 
-public class ChessHub : Hub
+namespace OnlineChess.Server.Hubs
 {
-    private readonly ChessDbContext _db;
-
-    public ChessHub(ChessDbContext db)
+    public class ChessHub : Hub
     {
-        _db = db;
-    }
+        private readonly ChessDbContext _db;
 
-    public async Task JoinGame(int gameId)
-    {
-        await Groups.AddToGroupAsync(Context.ConnectionId, gameId.ToString());
+        public ChessHub(ChessDbContext db)
+        {
+            _db = db;
+        }
 
-        var game = _db.Games
-            .Include(g => g.Moves)
-            .First(g => g.Id == gameId);
+        public async Task JoinGame(int gameId)
+        {
+            await Groups.AddToGroupAsync(
+                Context.ConnectionId,
+                gameId.ToString()
+            );
+        }
 
-        await Clients.Caller.SendAsync("GameState", game);
-    }
+        public async Task MakeMove(int gameId, Move move)
+        {
+            _db.Moves.Add(move);
+            await _db.SaveChangesAsync();
 
-    public async Task MakeMove(int gameId, Move move)
-    {
-        _db.Moves.Add(move);
-        await _db.SaveChangesAsync();
-
-        await Clients.Group(gameId.ToString())
-            .SendAsync("MovePlayed", move);
+            await Clients.Group(gameId.ToString())
+                .SendAsync("MovePlayed", move);
+        }
     }
 }
-
-🖥️ 5️⃣ Frontend – Blazor (Chess.razor).
+```
+- 🖥️ 5️⃣ Frontend – Blazor WebAssembly.
+- 📌 Chess.razor
+```
 @page "/chess/{GameId:int}"
+
 @using Microsoft.AspNetCore.SignalR.Client
+@using OnlineChess.Shared.Data
+@using OnlineChess.Shared.Models
 
 <h2>♟️ Online Chess</h2>
 
@@ -158,7 +190,7 @@ public class ChessHub : Hub
     <tr>
     @for (int x = 0; x < 8; x++)
     {
-        <td @onclick="() => Click(x,y)">
+        <td @onclick="() => Click(x, y)">
             @board[y, x]
         </td>
     }
@@ -169,22 +201,23 @@ public class ChessHub : Hub
 @code {
     [Parameter] public int GameId { get; set; }
 
-    HubConnection hub;
-    char[,] board = ChessBoard.Initial();
+    private HubConnection? hub;
+    private char[,] board = ChessBoard.Initial();
 
-    int sx, sy;
-    bool selected;
+    private int sx, sy;
+    private bool selected;
 
     protected override async Task OnInitializedAsync()
     {
         hub = new HubConnectionBuilder()
             .WithUrl("/chessHub")
+            .WithAutomaticReconnect()
             .Build();
 
-        hub.On<Move>("MovePlayed", m =>
+        hub.On<Move>("MovePlayed", move =>
         {
-            board[m.ToY, m.ToX] = board[m.FromY, m.FromX];
-            board[m.FromY, m.FromX] = '.';
+            board[move.ToY, move.ToX] = board[move.FromY, move.FromX];
+            board[move.FromY, move.FromX] = '.';
             StateHasChanged();
         });
 
@@ -192,7 +225,7 @@ public class ChessHub : Hub
         await hub.SendAsync("JoinGame", GameId);
     }
 
-    async Task Click(int x, int y)
+    private async Task Click(int x, int y)
     {
         if (!selected)
         {
@@ -202,55 +235,49 @@ public class ChessHub : Hub
         }
         else
         {
-            await hub.SendAsync("MakeMove", GameId,
-                new Move { FromX = sx, FromY = sy, ToX = x, ToY = y });
-
+            if (hub != null)
+            {
+                await hub.SendAsync("MakeMove", GameId,
+                    new Move
+                    {
+                        FromX = sx,
+                        FromY = sy,
+                        ToX = x,
+                        ToY = y
+                    });
+            }
             selected = false;
         }
     }
 }
-
-🗄️ 6️⃣ Script SQL – Oracle 19c.
-CREATE TABLE USERS (
-    ID NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-    USERNAME VARCHAR2(50) UNIQUE
-);
-
-CREATE TABLE GAMES (
-    ID NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-    WHITE_PLAYER_ID NUMBER,
-    BLACK_PLAYER_ID NUMBER,
-    WHITE_TURN NUMBER(1)
-);
-
+```
+- 🗄️ 6️⃣ Script SQL – Oracle 19c-.
+```
 CREATE TABLE MOVES (
     ID NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-    GAME_ID NUMBER,
     FROM_X NUMBER,
     FROM_Y NUMBER,
     TO_X NUMBER,
-    TO_Y NUMBER,
-    FOREIGN KEY (GAME_ID) REFERENCES GAMES(ID)
+    TO_Y NUMBER
 );
+```
+- ✅ Funcionalidades Implementadas
+* ✔ Aplicación Web real
+* ✔ Multijugador en tiempo real
+* ✔ SignalR funcional
+* ✔ Persistencia con EF Core
+* ✔ Arquitectura Cliente–Servidor–Shared
+* ✔ Escalable y extensible
 
-✅ Funcionalidades Implementadas
-* ✔ Aplicación Web
-* ✔ Multijugador real
-* ✔ Tiempo real con SignalR
-* ✔ Persistencia en Base de Datos
-* ✔ Registro de partidas y movimientos
-* ✔ Arquitectura Cliente–Servidor
-* ✔ Escalable y extensible.
+- 🎓 Nivel del Proyecto
+- 🎯 Proyecto final universitario
+- 💼 Portafolio profesional
+- 🌐 Demostración real de Web, Redes y BD
+- 🚀 Próximos Pasos
 
-* 🎓 Nivel del Proyecto
-* 🎯 Proyecto final universitario
-* 💼 Portafolio profesional
-* 🌐 Demostración real de redes, web y bases de datos
-* 🚀 Próximos Pasos (Extensiones).
-
-* 1️⃣ Reglas completas de ajedrez
-* 2️⃣ Login / Registro de usuarios
-* 3️⃣ Ranking y estadísticas
-* 4️⃣ Chat en tiempo real
-* 5️⃣ UI moderna estilo Chess.com
-* 6️⃣ Documentación final lista para entrega / :. / . .
+- 1️⃣ Reglas completas de ajedrez
+- 2️⃣ Login y registro de usuarios
+- 3️⃣ Ranking y estadísticas
+- 4️⃣ Chat en tiempo real
+- 5️⃣ UI moderna estilo Chess.com
+- 6️⃣ Documentación final para entrega / .
