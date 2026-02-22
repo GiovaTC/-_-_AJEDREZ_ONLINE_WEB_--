@@ -262,12 +262,12 @@ CREATE TABLE MOVES (
 );
 ```
 - ✅ Funcionalidades Implementadas
-* ✔ Aplicación Web real
-* ✔ Multijugador en tiempo real
-* ✔ SignalR funcional
-* ✔ Persistencia con EF Core
-* ✔ Arquitectura Cliente–Servidor–Shared
-* ✔ Escalable y extensible
+- ✔ Aplicación Web real
+- ✔ Multijugador en tiempo real
+- ✔ SignalR funcional
+- ✔ Persistencia con EF Core
+- ✔ Arquitectura Cliente–Servidor–Shared
+- ✔ Escalable y extensible
 
 - 🎓 Nivel del Proyecto
 - 🎯 Proyecto final universitario
@@ -282,7 +282,7 @@ CREATE TABLE MOVES (
 - 5️⃣ UI moderna estilo Chess.com
 - 6️⃣ Documentación final para entrega.
 
-// ----------------------------------- // ----------------------------- // ----------------------------- // ------------------------------- // ------------------- // .
+// ----------------------------------- // ----------------------------- // ----------------------------- // ------------------------------- // --------------- // .
 
 # ▶️ Cómo ejecutar **OnlineChess**:
 
