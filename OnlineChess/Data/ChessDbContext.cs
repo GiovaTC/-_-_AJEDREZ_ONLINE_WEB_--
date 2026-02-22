@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnlineChess.Server.Models;
+using OnlineChess.Shared.Models;
 
 namespace OnlineChess.Server.Data
 {
@@ -8,8 +8,8 @@ namespace OnlineChess.Server.Data
         public ChessDbContext(DbContextOptions<ChessDbContext> options) : 
             base(options) { }
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<Game> Games { get; set; }
+     //   public DbSet<Player> Players { get; set; }
+     //   public DbSet<GameState> Games { get; set; }
         public DbSet<Move> Moves { get; set; }
     }
 }   
