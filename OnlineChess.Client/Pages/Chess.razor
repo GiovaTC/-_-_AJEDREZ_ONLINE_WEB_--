@@ -6,7 +6,7 @@
 
 <h2>♟️ Online Chess</h2>
 
-<table class="chess-board">
+<table>
 @for (int y = 0; y < 8; y++)
 {
     <tr>
@@ -57,7 +57,7 @@
         }
         else
         {
-            if (hub is not null)
+            if (hub != null)
             {
                 await hub.SendAsync("MakeMove", GameId,
                     new Move
@@ -68,16 +68,7 @@
                         ToY = y
                     });
             }
-
             selected = false;
         }
     }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (hub is not null)
-        {
-            await hub.DisposeAsync();
-        }
-    }
-}
+}   
