@@ -22,9 +22,3 @@ app.MapFallbackToFile("index.html");
 
 app.Run();
 
-namespace OnlineChess.Server
-{
-    public class Program
-    {
-    }
-}
