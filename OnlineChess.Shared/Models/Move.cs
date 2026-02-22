@@ -1,8 +1,5 @@
 ﻿namespace OnlineChess.Shared.Models
 {
-    /// <summary>
-    /// Representa un movimiento de ajedrez entre dos casillas
-    /// </summary>
     public class Move
     {
         public int FromX { get; set; }
