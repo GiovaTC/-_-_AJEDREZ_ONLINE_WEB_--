@@ -261,12 +261,14 @@ CREATE TABLE MOVES (
     TO_Y NUMBER
 );
 ```
-  | ✅ Funcionalidades Implementadas |
-  | ✔ Aplicación Web real      | ✔ Multijugador en tiempo real          | ✔ SignalR funcional      |
-  | ✔ Persistencia con EF Core | ✔ Arquitectura Cliente–Servidor–Shared | ✔ Escalable y extensible |
+| ✅ Funcionalidades Implementadas | ✅ Funcionalidades Implementadas | ✅ Funcionalidades Implementadas |
+|--------------------------------|--------------------------------|--------------------------------|
+| ✔ Aplicación Web real           | ✔ Multijugador en tiempo real  | ✔ SignalR funcional             |
+| ✔ Persistencia con EF Core      | ✔ Arquitectura Cliente–Servidor–Shared | ✔ Escalable y extensible |
 
-  | 🎓 Nivel del Proyecto      | 🎯 Proyecto final universitario        | 💼 Portafolio profesional|
-  | 🌐 Demostración real de Web, Redes y BD |
+| 🎓 Nivel del Proyecto           | 🎯 Alcance Académico           | 💼 Uso Profesional              |
+|--------------------------------|-------------------------------|--------------------------------|
+| Proyecto final universitario   | Arquitectura completa         | Portafolio profesional         |
 
   🚀 Próximos Pasos
 
