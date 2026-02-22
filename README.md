@@ -280,4 +280,122 @@ CREATE TABLE MOVES (
 - 3️⃣ Ranking y estadísticas
 - 4️⃣ Chat en tiempo real
 - 5️⃣ UI moderna estilo Chess.com
-- 6️⃣ Documentación final para entrega / .
+- 6️⃣ Documentación final para entrega.
+
+// ----------------------------------- // ----------------------------- // ----------------------------- // ------------------------------- // ------------------- // .
+
+# ▶️ Cómo ejecutar **OnlineChess**:
+
+A continuación se explica **paso a paso y sin ambigüedades** cómo ejecutar la aplicación **OnlineChess**, tanto desde **Visual Studio 2022** como desde **terminal / consola**.
+
+---
+
+## 🔑 Regla principal (MUY IMPORTANTE):
+
+👉 **SOLO se ejecuta `OnlineChess.Server`**  
+Los proyectos **Client** y **Shared NO se ejecutan directamente**.
+
+---
+
+## 🟦 OPCIÓN 1 — Ejecutar desde **Visual Studio 2022** (RECOMENDADA):
+
+### 1️⃣ Abrir la solución:
+
+- Abrir **Visual Studio 2022**
+- Abrir el archivo:
+
+OnlineChess.sln
+
+
+---
+
+### 2️⃣ Establecer proyecto de inicio:
+
+En el **Explorador de soluciones**:
+
+
+OnlineChess.Server
+
+
+👉 Clic derecho → **Establecer como proyecto de inicio**
+
+✔ El proyecto debe mostrarse en **negrita**
+
+---
+
+### 3️⃣ Ejecutar la aplicacion:
+
+- Presionar **F5** → Ejecutar con depuración  
+- o **Ctrl + F5** → Ejecutar sin depuración  
+
+Visual Studio realizará automáticamente:
+
+- Compilación de la solución
+- Inicio del servidor **ASP.NET Core**
+- Apertura automática del navegador
+
+Salida esperada en el navegador:
+
+
+https://localhost:5001
+
+
+---
+
+### 4️⃣ Abrir el juego:
+
+En el navegador, ingresar:
+
+
+https://localhost:5001/chess/1
+
+
+📌 **Nota:**  
+`1` representa el **Id de la partida** (puede ser cualquier número por ahora).
+
+---
+
+## 🟨 OPCIÓN 2 — Ejecutar desde **Terminal / Consola**:
+
+### 1️⃣ Ir al proyecto Server:
+
+Desde la raíz de la solución:
+
+```bash
+cd OnlineChess.Server
+
+2️⃣ Ejecutar el servidor
+dotnet run
+
+Salida esperada en consola:
+
+Now listening on: https://localhost:5001
+
+3️⃣ Abrir en el navegador
+https://localhost:5001/chess/1
+
+🧪 Verificación rápida (prueba en 2 pestañas)
+
+Abrir dos ventanas o pestañas del navegador
+
+En ambas, ingresar:
+
+https://localhost:5001/chess/1
+
+Realizar un movimiento en una pestaña
+
+El movimiento debe reflejarse en la otra
+
+✔ Esto confirma que SignalR está funcionando correctamente
+
+🛑 Errores comunes (evítalos)
+Error	Causa
+No Main method	Se intentó ejecutar Client o Shared
+Página en blanco	El Server no está iniciado
+404 /chess	URL incorrecta
+SignalR no conecta	Hub no mapeado o servidor detenido
+
+🧠 Resumen corto
+1. Ejecutar OnlineChess.Server
+2. Abrir navegador
+3. Ir a /chess/{id} 
